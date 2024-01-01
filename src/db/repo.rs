@@ -11,13 +11,13 @@ pub struct Repository {
 impl Repository {
     fn init_db_config() -> DbConfig {
         let mut db_config: DbConfig = DbConfig::from_env();
-        db_config.get_connection_url();
+        db_config.set_connection_url();
         return db_config;
     }
 
     pub fn new () -> Repository {
         let db_config: DbConfig = Self::init_db_config();
-        Repository {
+        return Repository {
             config: db_config
         }
     }
