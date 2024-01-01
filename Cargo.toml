@@ -6,6 +6,19 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# Server
 actix-web = "*"
+# Config
+dotenvy = "*"
+config = "*"
+# Serializatoin
 serde = "*"
 serde_derive = "*"
+# Tokio
+tokio = "*"
+tokio-postgres = "*"
+tokio-pg-mapper = "*"
+tokio-pg-mapper-derive = "*"
+async-trait = "*"
+# Postgres
+sqlx = {version = "*", features = ["postgres", "runtime-tokio"]}
