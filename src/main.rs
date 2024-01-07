@@ -1,9 +1,10 @@
 use crate::configs::server_config::ServerConfig;
-use db::repo::Repository;
-use api::users::hello;
+use db::{repo::Repository, db_manager::DbManager};
+use api::users::register_user;
 use actix_web::{
     App, 
-    HttpServer
+    HttpServer,
+    web::{self, Data}
 };
 use sqlx::{Pool, Postgres};
 
@@ -12,8 +13,7 @@ mod configs;
 mod db;
 mod middlewares;
 mod models;
-
-// TODO: Init database with tables
+mod errors;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -21,12 +21,17 @@ async fn main() -> std::io::Result<()> {
     dotenvy::dotenv().ok();
     let server_config: ServerConfig = ServerConfig::load_config();
     let mut repo: Repository = Repository::new();
-    let _: Pool<Postgres> = repo.start_connection_pool().await;
+    let conn_pool: Pool<Postgres> = repo.start_connection_pool().await;
+    DbManager::init_tables(&conn_pool).await;
     
     // Init actix application
     let server = HttpServer::new(move || {
+        let users_scope = web::scope("/api/users")
+            .service(register_user);
+
         App::new()
-        .service(hello)
+        .app_data(Data::new(DbManager{db: conn_pool.clone()}))
+        .service(users_scope)
     })
     .bind(
         (server_config.server_address.clone(), server_config.server_port)

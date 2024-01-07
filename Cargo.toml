@@ -17,8 +17,6 @@ serde_derive = "*"
 # Tokio
 tokio = "*"
 tokio-postgres = "*"
-tokio-pg-mapper = "*"
-tokio-pg-mapper-derive = "*"
 async-trait = "*"
 # Postgres
 sqlx = {version = "*", features = ["postgres", "runtime-tokio"]}
