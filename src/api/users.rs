@@ -14,6 +14,7 @@ pub async fn register_user(db: Data<DbManager>, user: Json<Users>) -> HttpRespon
     // TODO: Check authorization/authentication here via headers
     // TODO: Add validations here
     // TODO: Handle duplicates
+    // TODO: Create custom error object
     let result = sqlx::query_as::<_, Users>(
     &insert_query    
     )
@@ -29,7 +30,7 @@ pub async fn register_user(db: Data<DbManager>, user: Json<Users>) -> HttpRespon
         Ok(created_user) => HttpResponse::Created().json(created_user),
         Err(e) => {
             println!("Failed to insert user: {e}");
-            HttpResponse::BadRequest().json("Unable to insert user")  // TODO: Create custom error object
+            HttpResponse::BadRequest().json("Unable to insert user")
         } 
     }
 }
